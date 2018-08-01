@@ -1,0 +1,14 @@
+{
+  "title": "Machine Learning Notes",
+  "author": "Aaron Xia",
+  "language": "en",
+  "plugins": [
+              "mathjax",
+              "bibtex-citations-and-references"
+  ],
+  "pluginsConfig": {
+    "mathjax": {
+    }
+  }
+  
+}
