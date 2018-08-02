@@ -13,7 +13,8 @@ Conceal the computational and mental overhead of mixed CPU/GPU operation by sync
 The conventional blob dimensions for batches of image data are 
 $$
 N \times K \times H \times W
-$$ with $$N$$ - number, $$K$$ - channel, $$H$$ - height, $$W$$ - width.
+$$
+with $$N$$ - number, $$K$$ - channel, $$H$$ - height, $$W$$ - width.
 
 Blob memory is **row-major** in layout, so the last / rightmost dimension changes fastest. For example, in a 4D blob, the value at index $$(n, k, h, w)$$ is physically located at index 
 $$

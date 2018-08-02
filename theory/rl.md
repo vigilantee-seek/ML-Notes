@@ -26,4 +26,10 @@ In fact, the gradient descent algorithm applied in the widespread back propagati
 
 **Elements**: Beyond the agent and the environment, one can identify four main subelements of a reinforcement learning system: *a policy, a reward signal, a value function, and, optionally, a model of the environment*.
 
-- policy: A mapping from 
+- policy: A mapping from perceived states of the environment to actions to be taken when in those states.
+- reward signal: The goal in a reinforcement learning problem.
+- value function: Specifies what is good in the long run. Roughly speaking, the value of a state is the total amount of reward an agent can expect to accumulate over the future, starting from that state. Whereas *rewards* determine the immediate, intrinsic desirability of environmental states, *values* indicate the long-term desirability of states after taking into account the states that are likely to follow, and the rewards available in those states.
+- model: Something that mimics the behavior of the environment, or more generally, that allows inferences to be made about how the environment will behave.
+
+**Key**: In fact, the most important component of almost all reinforcement learning algorithms we consider is a method for eﬃciently estimating values. The central role of value estimation is arguably the most important thing we have learned about reinforcement learning over the last few decades.
+
