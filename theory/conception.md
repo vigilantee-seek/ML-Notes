@@ -1,12 +1,12 @@
-### Learning Algorithms
+## Learning Algorithms
 
-#### Definition of learning
+### Definition of learning
 
 > A computer program is said to learn from experience $$E$$ with respect to some class of tasks $$T$$ and performance measure $$P$$, if its performance at tasks in $$T$$, as measured by $$P$$, improves with experience $$E$$.
 >
 > --- by Mitchell (1997)
 
-##### The Task, T
+#### The Task, T
 
 Machine learning tasks are usually described in terms of how the machine learning system should process an example. An example is a collection of features that have been quantitatively measured from some object or event that we want the machine learning system to process.
 
@@ -40,7 +40,7 @@ The difference between supervised learning and unsupervised learning:
 
 Roughly speaking, unsupervised learning involves observing several examples of a random vector $$x$$ and attempting to implicitly or explicitly learn the probablity distribution $$p(x)$$, or some interesting properties of that distribution; while supervised learning involves observing several examples of a random vector $$x$$ and an associated value or vector $$y$$, then learning to predict $$y$$ from $$x$$, usually by estimating $$p(y|x)$$.
 
- #### Capacity, Overfitting and Underfitting
+#### Capacity, Overfitting and Underfitting
 
 **How can we aﬀect performance on the test set when we can observe only the training set?**
 
@@ -57,25 +57,25 @@ We can control whether a model is more likely to overﬁt or underﬁt by alteri
 
 Then what is the source of overfitting? The answer is sampling noise. We know that deep neural networks are expressive models that can learn very complicated relationships between their inputs and outputs.  With limited training data, however, many of these complicated relationships will be the result of sampling noise, so they will exist in the training set but not in real test data even if it is drawn from the same distribution. This leads to overﬁtting.
 
-##### The No Free Lunch Theorem
+#### The No Free Lunch Theorem
 
 Averaged over all possible data-generating distributions, every classiﬁcation algorithm has the same error rate when classifying previously unobserved points. In other words, no machine learning way is universally any better than any other. 
 
 Fortunately, these results hold only when we average over all possible data-generating distributions. If we make assumptions about the kinds of probability distributions we encounter in real-world applications, then we can design learning algorithms that perform well on these distributions.
 
-##### Dropout
+#### Dropout
 
-###### Targets
+##### Targets
 
 Overﬁtting is a serious problem in such networks. Large networks are also slow to use, making it diﬃcult to deal with overﬁtting by combining the predictions of many diﬀerent large neural nets at test time. Dropout is a technique for addressing this problem. The key idea is to randomly drop units (along with their connections) from the neural network during training. This prevents units from co-adapting too much. 
 
-###### Method
+##### Method
 
 During training, dropout samples from an exponential number of diﬀerent “thinned” networks. At test time, it is easy to **approximate** the eﬀect of averaging the predictions of all these thinned networks by simply using a single "unthinned" network that has smaller weights.
 
 A unit at training time that is present with probability p and is connected to units in the next layer with weights w while at test time, the unit is always present and the weights are multiplied by p. The output at test time is same as the expected output at training time.
 
-###### Motivation
+##### Motivation
 
 > The ability of a set of genes to be able to work well with another random set of genes makes them more robust. Since a gene cannot rely on a large set of partners to be present at all times, it must learn to do something useful on its own or in collaboration with a small number of other genes. According to this theory, the role of sexual reproduction is not just to allow useful new genes to spread throughout the population, but also to facilitate this process by reducing complex co-adaptations that would reduce the chance of a new gene improving the ﬁtness of an individual.
 
