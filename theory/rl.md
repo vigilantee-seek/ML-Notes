@@ -33,3 +33,37 @@ In fact, the gradient descent algorithm applied in the widespread back propagati
 
 **Key**: In fact, the most important component of almost all reinforcement learning algorithms we consider is a method for eﬃciently estimating values. The central role of value estimation is arguably the most important thing we have learned about reinforcement learning over the last few decades.
 
+### Multi-arm Bandits
+
+#### Preface
+
+The most important feature distinguishing reinforcement learning from other types of learning is that it uses training information that evaluates the actions taken rather than instructs by giving correct actions.  Evaluative feedback depends entirely on the action taken, whereas instructive feedback is independent of the action taken. 
+
+#### Problem Statement
+
+Consider the following learning problem. You are faced repeatedly with a choice among n diﬀerent options, or actions. After each choice you receive a numerical reward chosen from a stationary probability distribution that depends on the action you selected. Your objective is to maximize the expected total reward over some time period, for example, over 1000 action selections, or *time steps*.
+
+#### Balancing Methods
+
+In any speciﬁc case, whether it is better to explore or exploit depends in a complex way on the precise values of the estimates, uncertainties, and the number of remaining steps. That means both exploration and exploitation are important in our learning and we need to balance them well. There are many sophisticated methods for balancing exploration and exploitation but most of them make strong assumptions about stationarity and prior knowledge that are either violated or impossible to verify in applications. 
+
+##### Action-Value Methods
+
+We denote the true (actual) value of action $$a$$ as $$q(a)$$, and the estimated value on the tth time step as $$Q_t(a)$$. Recall that the true value of an action is the mean reward received when that action is selected. One natural way to estimate this is by averaging the rewards actually received when the action was selected. In other words, if by the $$t$$th time step action a has been chosen $$N_t(a)$$ times prior to $$t$$, yielding rewards $$R_1,R_2,...,R_{N_t}(a)$$, then its value is estimated to be 
+$$
+Q_t(a) = \frac{R_1+R_2+...+R_{N_t}(a)}{N_t(a)}
+$$
+If $$N_t(a) = 0$$, then we define $$Q_t(a)$$ instead as some default value, such as $$Q_1(a)=0$$. As $$N_t(a) \rightarrow \infty$$, by the law of large numbers, $$Q_t(a)$$ converges to $$q(a)$$.
+
+The simplest action selection rule is to select the action (or one of the actions) with highest estimated action value. The *greedy* action selection method can be written as 
+$$
+A_t = argmax_a Q_t(a)
+$$
+
+A simple alternative is to behave greedily most of the time, but every once in a while, say with small probability $$\epsilon$$, instead to select randomly from amongst all the actions with equal probability independently of the actionvalue estimates. We call methods using this near-greedy action selection rule $$\epsilon$$-greedy methods. An advantage of these methods is that, in the limit as the number of plays increases, every action will be sampled an inﬁnite number of times, guaranteeing that $$N_t(a) \rightarrow \infty$$ for all $$a$$, and thus ensuring that all the $$Q_t(a)$$ converge to $$q(a)$$.
+
+Despite the theoretically precise estimate, the cost of exploration is obviously too vast to cover especially taking the nonstationary practical environment, that is, that the true values of the actions changed over time into account. Even if the underlying task is stationary and deterministic, the learner faces a set of banditlike decision tasks each of which changes over time due to the learning process itself. Therefore, a more practical method is in need. 
+
+##### Incremental Implementation
+
+Just as the straightforward implementation mentioned above, the memory 
