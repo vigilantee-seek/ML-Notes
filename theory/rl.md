@@ -1,6 +1,6 @@
 ## Reinforcement Learning
 
-This chapter is mainly organised according to *Reinforcement Learning: An Introduction* by {{"Richard2014"|cite}}.
+This chapter is mainly organised according to *Reinforcement Learning: An Introduction* by **Richard S. Sutton and Andrew G. Barto**.
 
 ### Basic Ideas
 
@@ -12,7 +12,7 @@ This chapter is mainly organised according to *Reinforcement Learning: An Introd
 
 > Supervised learning is learning from a training set of labeled examples provided by a knowledgable external supervisor. Each example is a description of a situation together with a speciﬁcation—the label—of the correct action the system should take to that situation, which is often to identify a category to which the situation belongs. The object of this kind of learning is for the system to extrapolate, or generalize, its responses so that it acts correctly in situations not present in the training set. This is an important kind of learning, but alone it is not adequate for learning from interaction. In interactive problems it is often impractical to obtain examples of desired behavior that are both correct and representative of all the situations in which the agent has to act.
 
-To smmarize, I think, the major discrimination lies on the envirionment. Supervised learning is for static environmental conditions while a reinforcement learning method is more suitable to handle dynamic scenes. Popularly speaking, supervised learning is to rear livestock in pens, by contrast, reinforcement learning is to leave livestock in wild by themselves. 
+To summarize, I think, the major discrimination lies on the environment. Supervised learning is for static environmental conditions while a reinforcement learning method is more suitable to handle dynamic scenes. Popularly speaking, supervised learning is to rear livestock in pens, by contrast, reinforcement learning is to leave livestock in wild by themselves. 
 
 As for unsupervised learning:
 
@@ -228,4 +228,42 @@ The above problems we consider are only nonassociative tasks, where there is no 
 A somewhat aggressive idea proposed by the book:
 
 > In this chapter we introduce the problem that we try to solve in the rest of the book. For us, this problem deﬁnes the ﬁeld of reinforcement learning: any method that is suited to solving this problem we consider to be a reinforcement learning method.
+
+> The general rule we follow is that anything that cannot be changed arbitrarily by the agent is considered to be outside of it and thus part of its environment. ... In fact, in some cases the agent may know *everything* about how its environment works and still face a difficult reinforcement learning task, just as we may know exactly how a puzzle like Rubik’s cube works, but still be unable to solve it. The agent–environment boundary represents the limit of the agent’s *absolute control*, not of its knowledge.
+
+Well, something beside the point. I noticed an interesting idea mentioned here that even if the agent knows everything about how its environment works, it may still face a difficult learning task. It's something philosophical, I think. You know all but you can't make it. It indicates the gap between methodology and epistimology to some degree. 
+
+A model of learning goal-directed behavior:
+
+**Three signals passing back and forth between an agent and its environment: one signal to represent the choices made by the agent (the actions), one signal to represent the basis on which the choices are made (the states), and one signal to deﬁne the agent’s goal (the rewards).**
+
+Some tips:
+
+* The reward signal is your way of communicating to the robot *what* you want it to achieve, not *how* you want it achieved.
+* Rewards are computed in the environment rather than in the agent. 
+* The agent's ultimate goal should be something over which it has imperfect control: it should not be able, for example, to simply decree that the reward has been received in the same way that it might arbitrarily change its actions. 
+
+#### Returns
+
+The agents' goal is to maximize the cumulative reward it receives in the long run. Suppose the sequence of rewards received after time step $$t$$ is denoted $$R_{t+1}, R_{t+2}, R_{t+3},...$$, then the *expected return*, where the return $$G_t$$ is defined as some specific function of the reward sequence. 
+
+##### Discrete Situation
+
+In the simplest case the return is the sum of the rewards: 
+$$
+G_t = R_{t+1} + R_{t+2} + R_{t+3} + ... + R_T
+$$
+where $$T$$ is a final time step. 
+
+This approach makes sense in applications in which there is a natural notion of ﬁnal time step, that is, when the agent–environment interaction breaks naturally into subsequences, which we call *episodes*, such as plays of a game, trips through a maze, or any sort of repeated interactions. Each episode ends in a special state called the *terminal state*, followed by a reset to a standard starting state or to a sample from a standard distribution of *starting states*. Tasks with episodes of this kind are called *episodic tasks*. 
+
+##### Continual Situation
+
+On the other hand, in many cases the agent–environment interaction does not break naturally into identiﬁable episodes, but goes on continually without limit. For example, this would be the natural way to formulate a continual process-control task, or an application to a robot with a long life span. We call these *continuing tasks*. 
+
+The additional concept that we need is that of *discounting*. According to this approach, the agent tries to select actions so that the sum of the discounted rewards it receives over the future is maximized. In particular, it chooses At to maximize the expected *discounted return*:
+$$
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+$$
+where \gamma is a parameter, $$0 \le \gamma \ge 1$$, called the *discount rate*.
 
