@@ -6,6 +6,7 @@
   * [IO](./theory/engineer.md)
   * [Architecture](./theory/architecture.md)
   * [Reinforcement Learning](./theory/rl.md)
+  * [Awesome Ideas](./theory/ideas.md)
 * Tools
   * Caffe
     * [Summary](./tools/Caffe/summary.md)

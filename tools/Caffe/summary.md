@@ -66,7 +66,9 @@ The net jointly defines a function and its gradient by composition and auto-diff
 
 Let's take a simple logistic regression classifier for instance:
 
+<div align="center">
 <img src="../../src/netArch.png" width="50%">
+</div>
 
 It's defined by:
 
