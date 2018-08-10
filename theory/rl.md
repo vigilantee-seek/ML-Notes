@@ -265,5 +265,116 @@ The additional concept that we need is that of *discounting*. According to this 
 $$
 G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + ... = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
 $$
-where \gamma is a parameter, $$0 \le \gamma \ge 1$$, called the *discount rate*.
+where \gamma is a parameter, $$0 \le \gamma \le 1$$, called the *discount rate*.
+
+The discount rate determines the present value of future rewards: a reward received k time steps in the future is worth only $$\gamma^{k−1}$$ times what it would be worth if it were received immediately. If $$\gamma < 1$$, the inﬁnite sum has a ﬁnite value as long as the reward sequence $$\{R_k\}$$ is bounded. If $$\gamma = 0$$, the agent is “myopic” in being concerned only with maximizing immediate rewards: its objective in this case is to learn how to choose At so as to maximize only $$R_{t+1}$$. If each of the agent’s actions happened to inﬂuence only the immediate reward, not future rewards as well, then a myopic agent could maximize the equation by separately maximizing each immediate reward. But in general, acting to maximize immediate reward can reduce access to future rewards so that the return may actually be reduced. As $$\gamma$$ approaches 1, the objective takes future rewards into account more strongly: the agent becomes more farsighted.
+
+#### Markov Decision Processes
+
+##### Definition
+
+A reinforcement learning task that satisﬁes the Markov property is called a *Markov decision process*, or *MDP*. If the state and action spaces are finite, then it is called a *finite Markov decision process* (*ﬁnite MDP*).
+
+A particular ﬁnite MDP is deﬁned by its state and action sets and by the one-step dynamics of the environment. Given any state and action $$s$$ and $$a$$, the probability of each possible pair of next state and reward, $$s'$$,$$r$$, is denoted
+$$
+p(s',r|s,a) = Pr\{S_{t+1}=s', R_{t+1}=r | S_t=s, A_t=a\}
+$$ 
+
+These quantities completely specify the dynamics of a ﬁnite MDP. 
+
+With the dynamics, we can compute anything we want to know, such as the expected rewards for state-action pairs,
+$$
+r(s,a) = \mathbb{E} \left[ R_{t+1} | S_t=s, A_t=a \right] = \sum_{r\in \mathcal{R}}r \sum_{s' \in \mathcal{S}} p(s',r | s,a),
+$$
+
+the state-transition probabilities,
+$$
+p(s'|s,a) = Pr\{ S_{t+1}=s' | S_t=s, A_t=a \} = \sum_{r\in R} p(s',r| s,a),
+$$
+
+and the expected reweards for the state-action-next state triples,
+$$
+r(s,a,s') = \mathbb{E}_{\pi} \left[ R_{t+1} | S_t=s, A_t=s, S_{t+1}=s' \right] = \frac{\sum_{r\in \mathcal{R}} rp(s',r | s,a)}{p(s'|s,a)}
+$$
+
+#### Value Functions
+
+Recall that a policy, $$\pi$$, is a mapping from each state, $$s \in \mathcal{S}$$, and action, $$a \in A(s)$$, to the probability $$\pi(a|s)$$ of taking action a when in state $$s$$. For MDPs, we can define $$v_{\pi}(s)$$ (the value of a state $$s$$ under a policy $$\pi$$) formally as 
+$$
+v_{\pi}(s) = \mathbb{E}\left[ G_t | S_t=s \right] = \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} | S_t=s \right],
+$$
+where $$ \mathbb{E}_{\pi} [ \centerdot ] $$ denotes the expected value of a random variable given that the agent follows policy $$\pi$$, and $$t$$ is any time step. Note that the value of the terminal state, if any, is always zero. We call the function $$v_\pi$$ the *state-value function for policy* $$\pi$$.
+
+Similarly, we deﬁne the value of taking action $$a$$ in state $$s$$ under a policy $$\pi$$, denoted $$q_{\pi}(s,a)$$, as the expected return starting from $$s$$, taking the action $$a$$, and thereafter following policy $$\pi$$: 
+$$
+q_{\pi}(s,a) = \mathbb{E}_{\pi} \left[ G_t | S_t=s, A_t=a \right] = \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} | S_t=s, A_t=a \right]
+$$
+We call $$q_{\pi}$$ the *action-value function for poliy* $$\pi$$.
+
+For any policy $$\pi$$ and any state $$s$$, the following consistency condition holds between the value of $$s$$ and the value of its possible successor states: 
+$$
+\begin{align*}
+v_{\pi}(s) &= \mathbb{E}_{\pi} \left[ G_t | S_t=s \right] \\
+           &= \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} | S_t=s \right]  \\
+           &= \mathbb{E}_{\pi} \left[ R_{t+1} + \gamma \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_t=s \right],
+\end{align*}
+$$
+here, because of the Markov property
+$$
+\mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_{t+1}=s', S_t=s \right] = \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_{t+1}=s' \right]        \\
+\Longrightarrow \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_t=s \right] = \sum_{s'} \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_{t+1}=s' \right] p(s'|s),
+$$
+and we know
+$$
+r(s,a) = \mathbb{E} \left[ R_{t+1} | S_t=s, A_t=a \right] = \sum_{r\in \mathcal{R}}r \sum_{s' \in \mathcal{S}} p(s',r | s,a)    \\
+p(s'|s,a) = Pr\{ S_{t+1}=s' | S_t=s, A_t=a \} = \sum_{r\in \mathcal{R}} p(s',r| s,a)  \\
+$$
+Therefore,
+$$
+\begin{align*}
+v_{\pi}(s) &= \sum_a \pi(a|s) \sum_{s'} \sum_r p(s',r|s,a) \left[ r + \gamma                    \mathbb{E}_{\pi} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_{t+1}             =s' \right] \right]  \\
+           &= \sum_a \pi(a|s) \sum_{s'} \sum_r p(s',r|s,a) \left[ r + \gamma v_{\pi}(s') \right],
+\end{align*} 
+$$
+
+This is the *Bellman Equation for* $$v_{\pi}$$. It expresses a relationship between the value of a state and the values of its successor states. It averages over all the possibilities, weighting each by its probability of occurring. It states that the value of the start state must equal the (discounted) value of the expected next state, plus the reward expected along the way. 
+
+#### Optimal Value Function
+
+For finite MDPs, we can precisely define an optimal policy in the following way. Value functions define a partial ordering over policies. A policy $$\pi$$ is deﬁned to be better than or equal to a policy $$\pi'$$ if its expected return is greater than or equal to that of π0 for all states. In other words, $$\pi \ge \pi'$$ if and only if $$v_{\pi}(s) \ge v_{\pi'}(s)$$ for all $$s \in \mathcal{S}$$. There is always at least one policy that is better than or equal to all other policies. This is an *optimal policy*. Although there may be more than one, we denote all the optimal policies by $$\pi_*$$. They share the same state-value function, called the *optimal state-value function*, denoted $$v_*$$, and defined as 
+$$
+v_*(s) = \max_{\pi} v_{\pi}(s),
+$$
+for all $$s \in \mathcal{S}$$.
+
+Optimal policies also share the same optimal action-value function, denoted q∗, and defined as 
+$$
+q_*(s,a) = \max_{\pi} q_{\pi}(s,a),
+$$
+
+**Noted**: Here $$v_*(s)$$ DOES NOT have the exactly same meaning as the $$v_{\pi}(s)$$ we mentioned above. Precisely speaking,
+$$
+\begin{align*}
+v_*(s) &= \max_{a\in \mathcal{A}(s)} q_{\pi_*}(s,a)      \\
+       &= \max_a \mathbb{E}_{\pi_*} \left[ G_t | S_t=s, A_t=a \right]    \\
+       &= \max_a \mathbb{E}_{\pi_*} \left[ \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} | S_t=s, A_t=a \right]    \\
+       &= \max_a \mathbb{E}_{\pi_*} \left[ R_{t+1} + \gamma \sum_{k=0}^{\infty} \gamma^k R_{t+k+2} | S_t=s, A_t=a \right]        \\
+       &= \max_a \mathbb{E} \left[ R_{t+1} + \gamma v_*(S_{t+1}) | S_t=s, A_t=a \right]        \\
+       &= \max_{a\in \mathcal{A}(s)} \sum_{s',r} p(s',r|s,a) \left[ r + \gamma v_*(s') \right]
+\end{align*}
+$$
+Similarly,
+$$
+\begin{align*}
+q_*(s,a) &= \mathbb{E} \left[ R_{t+1} + \gamma \max_{a'} q_*(S_{t+1},a') | S_t=s,              A_t=a \right]   \\
+         &= \sum_{s',r} p(s',r|s,a) \left[ r + \gamma \max_{a'} q_*(s',a') \right]
+\end{align*}
+$$
+
+#### Optimality and Approximation
+
+Even if the agent has a complete and accurate environment model, the agent is typically unable to perform enough computation per time step to fully use it. The memory available is also an important constraint. Memory may be required to build up accurate approximations of value functions, policies, and models. In most cases of practical interest there are far more states than could possibly be entries in a table, and approximations must be made.
+
+
+### Dynamic Programming
 
