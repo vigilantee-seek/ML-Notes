@@ -3,12 +3,13 @@
   "author": "Aaron Xia",
   "language": "en",
   "plugins": [
+              "-search",
+              "-lunr",
               "mathjax",
               "bibtex-citations-and-references"
   ],
   "pluginsConfig": {
-    "mathjax": {
-    }
+    
   }
   
 }
